@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
+import MapView from './pages/MapView';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -38,7 +39,8 @@ const App: React.FC = () => {
               setSelectedPage(props.match.params.name);
               return <Page {...props} />;
             }} exact={true} />
-            <Route path="/" render={() => <Redirect to="/page/Map" />} exact={true} />
+            <Route path="/" render={() => <Redirect to="/Map" />} exact={true} />
+            <Route path="/Map" render={() => <MapView />} exact={true} />
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>

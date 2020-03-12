@@ -28,7 +28,7 @@ interface AppPage {
 const appPages: AppPage[] = [
   {
     title: 'Map',
-    url: '/page/Map',
+    url: '/Map',
     iosIcon: map,
     mdIcon: mapSharp
   },
