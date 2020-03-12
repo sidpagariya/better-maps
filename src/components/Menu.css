@@ -15,6 +15,7 @@ ion-menu.md ion-list {
 
 ion-menu.md ion-note {
   margin-bottom: 30px;
+  font-style: italic;
 }
 
 ion-menu.md ion-list-header, ion-menu.md ion-note {
@@ -97,7 +98,6 @@ ion-menu.ios ion-note {
 ion-menu.ios ion-note {
   margin-bottom: 8px;
   font-style: italic;
-  text-decoration-line: underline;
 }
 
 ion-note {
