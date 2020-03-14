@@ -1,0 +1,12 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "better-maps",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {},
+  "server": {
+    "url": "http://10.165.11.133:8100",
+    "cleartext": true
+  }
+}

@@ -40,7 +40,7 @@ const appPages: AppPage[] = [
   },
   {
     title: 'Routes',
-    url: '/page/Routes',
+    url: '/Routes',
     iosIcon: bus,
     mdIcon: busSharp,
   },

@@ -1,5 +1,7 @@
 {
   "name": "better-maps",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "react"
 }
