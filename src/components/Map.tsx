@@ -17,6 +17,8 @@ const Map: React.FC<MapProps> = ({ mapCenter, locations }) => {
         lng: mapCenter.lng
       },
       zoom: 14,
+      zoomControl: false,
+      streetViewControl: false,
       styles: [
         {elementType: 'geometry', stylers: [{color: '#121212'}]},
         {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
@@ -126,20 +128,18 @@ const Map: React.FC<MapProps> = ({ mapCenter, locations }) => {
     }
 
   }, [mapCenter, locations]);
-
-  var requestOptions = {
-    method: 'GET',
-    redirect: 'follow'
-  };
   
-  fetch("https://mbus.ltp.umich.edu/bustime/api/v3/getrtpidatafeeds?requestType=getrtpidatafeeds&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json",
+  fetch("https://cors-anywhere.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getrtpidatafeeds?requestType=getrtpidatafeeds&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json",
     {
       method: 'GET',
-      redirect: 'follow'
+      redirect: 'follow',
+      headers: {
+        'Origin': 'mbus.ltp.umich.edu'
+      }
     })
     .then(response => response.text())
     .then(result => console.log(result))
-    .catch(error => alert('error'+error));
+    .catch(error => console.log('error', error));
 
   return (
     <div ref={mapEle} className="map-canvas"></div>
