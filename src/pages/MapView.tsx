@@ -1,13 +1,13 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import { Location } from '../models/Location';
-import Map from '../components/NewMap';
+import GoogleMap from '../components/Map';
 import './MapView.css';
 
 interface OwnProps { }
 
 const MapView = () => {
-  let locations : Location[] = [{id: 0, lat: 42.2911535, lng: -83.7174913, name: 'LOL'}]
+  //let locations : Location[] = [{id: 0, lat: 42.2911535, lng: -83.7174913, name: 'LOL'}]
   let mapCenter : Location = {id: 0, lat: 42.2852842, lng: -83.7276201}
   return (
     <IonPage>
@@ -26,7 +26,7 @@ const MapView = () => {
             <IonTitle size="large">Map</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <Map mapCenter={mapCenter} />
+        <GoogleMap mapCenter={mapCenter} />
       </IonContent>
     </IonPage>
   );
