@@ -1,7 +1,7 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import { Location } from '../models/Location';
-import Map from '../components/Map';
+import Map from '../components/NewMap';
 import './MapView.css';
 
 interface OwnProps { }
@@ -26,7 +26,7 @@ const MapView = () => {
             <IonTitle size="large">Map</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <Map locations={locations} mapCenter={mapCenter} />
+        <Map mapCenter={mapCenter} />
       </IonContent>
     </IonPage>
   );
