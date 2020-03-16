@@ -105,6 +105,18 @@ const Map : React.FC<MapProps> = ({ mapCenter }) => {
       infoWindow.open(map, marker);
     });
   }
+  fetch("https://cors-anywhere.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getrtpidatafeeds?requestType=getrtpidatafeeds&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json",
+    {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'Origin': 'mbus.ltp.umich.edu'
+      }
+    })
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+  
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <GoogleMapReact
