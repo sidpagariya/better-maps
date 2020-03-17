@@ -1,7 +1,7 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import './Map.css';
-import { mbusSvg, getBusMarkerIcon } from '../const';
+import { getBusMarkerIcon } from '../const';
 
 // const AnyReactComponent = ({text}: any) => <div>{text}</div>;
 
@@ -19,7 +19,7 @@ interface MapState {
   mbuses: any
 }
 
-export class GoogleMap extends React.Component<MapProps, MapState> {
+export default class GoogleMap extends React.Component<MapProps, MapState> {
   constructor(props: MapProps) {
     super(props);
     this.state = {
@@ -250,7 +250,7 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
       }
     ];
     const mapOptions = {
-      styles: null //mapStyles
+      styles: mapStyles
     }
     return (
       <div style={{ height: '100%', width: '100%' }}>
@@ -280,5 +280,3 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
     // });
   }
 }
-
-export default GoogleMap;
