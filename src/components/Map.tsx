@@ -34,7 +34,6 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
     }
   }
   componentDidMount() {
-    console.log("Component mounted!");
     const mbusRoutes = "https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getroutes?requestType=getroutes&locale=en&key=8TYWA9FMumRW5JgFXRzkj2Upk&format=json"
     fetch(mbusRoutes,
     {
@@ -130,8 +129,6 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
     })
     .then(response => response.json())
     .then(result => {
-      // console.log(result);
-      console.log("Updated buses!");
       const buses = result['bustime-response']['vehicle'].map(vh => {
         if (mbuses) {
           if (mbuses.get(vh.vid)) {
