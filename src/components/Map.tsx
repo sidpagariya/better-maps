@@ -136,16 +136,6 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
         if (mbuses) {
           if (mbuses.get(vh.vid)) {
             mbuses.get(vh.vid).setPosition(new maps.LatLng(vh.lat, vh.lon));
-            // mbuses.get(vh.vid).setIcon({
-            //   path: google.maps.SymbolPath.CIRCLE,
-            //   scale: 4,
-            //   fillColor: routes.get(vh.rt)[1],
-            //   fillOpacity: 0.7,
-            //   rotation: (parseFloat(vh.hdg) + 180) % 360,
-            //   strokeColor: routes.get(vh.rt)[1],
-            //   strokeOpacity: 1.0,
-            //   strokeWeight: 2
-            // });
             mbuses.get(vh.vid).setIcon(getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg))
           } else {
             const marker = new SlidingMarker({
@@ -154,22 +144,7 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
               title: vh.rt,
               duration: 5000,
               easing: "linear",
-              // icon: {
-              //   anchor: new google.maps.Point(16, 16),
-              //   url: 'data:image/svg xml;charset=utf-8,' + encodeURIComponent((document.querySelector('.markerImage').innerHTML || '').replace('{{background}}', "#FF4847"))
-              // }
-              // icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt,
               icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg)
-              // icon: {
-              //   path: google.maps.SymbolPath.CIRCLE,
-              //   scale: 4,
-              //   fillColor: routes.get(vh.rt)[1],
-              //   fillOpacity: 0.7,
-              //   rotation: (parseFloat(vh.hdg) + 180) % 360,
-              //   strokeColor: routes.get(vh.rt)[1],
-              //   strokeOpacity: 1.0,
-              //   strokeWeight: 2
-              // }
             });
             mbuses.set(vh.vid, marker);
           }
@@ -181,22 +156,7 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
             title: vh.rt,
             duration: 5000,
             easing: "linear",
-            // icon: {
-            //   anchor: new google.maps.Point(16, 16),
-            //   url: 'data:image/svg xml;charset=utf-8,' + encodeURIComponent((document.querySelector('.markerImage').innerHTML || '').replace('{{background}}', "#FF4847"))
-            // }
-            // icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt,
             icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg)
-            // icon: {
-            //   path: google.maps.SymbolPath.CIRCLE,
-            //   scale: 4,
-            //   fillColor: routes.get(vh.rt)[1],
-            //   fillOpacity: 0.7,
-            //   rotation: (parseFloat(vh.hdg) + 180) % 360,
-            //   strokeColor: routes.get(vh.rt)[1],
-            //   strokeOpacity: 1.0,
-            //   strokeWeight: 2
-            // }
           });
           mbuses.set(vh.vid, marker);
         }
