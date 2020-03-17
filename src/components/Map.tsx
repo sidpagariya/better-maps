@@ -1,6 +1,7 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import './Map.css';
+import { mbusSvg, getBusMarkerIcon } from '../const';
 
 // const AnyReactComponent = ({text}: any) => <div>{text}</div>;
 
@@ -145,6 +146,7 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
             //   strokeOpacity: 1.0,
             //   strokeWeight: 2
             // });
+            mbuses.get(vh.vid).setIcon(getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg))
           } else {
             const marker = new SlidingMarker({
               position: new maps.LatLng(vh.lat, vh.lon),
@@ -152,7 +154,12 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
               title: vh.rt,
               duration: 5000,
               easing: "linear",
-              icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt
+              // icon: {
+              //   anchor: new google.maps.Point(16, 16),
+              //   url: 'data:image/svg xml;charset=utf-8,' + encodeURIComponent((document.querySelector('.markerImage').innerHTML || '').replace('{{background}}', "#FF4847"))
+              // }
+              // icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt,
+              icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg)
               // icon: {
               //   path: google.maps.SymbolPath.CIRCLE,
               //   scale: 4,
@@ -174,7 +181,12 @@ export class GoogleMap extends React.Component<MapProps, MapState> {
             title: vh.rt,
             duration: 5000,
             easing: "linear",
-            icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt
+            // icon: {
+            //   anchor: new google.maps.Point(16, 16),
+            //   url: 'data:image/svg xml;charset=utf-8,' + encodeURIComponent((document.querySelector('.markerImage').innerHTML || '').replace('{{background}}', "#FF4847"))
+            // }
+            // icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt,
+            icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg)
             // icon: {
             //   path: google.maps.SymbolPath.CIRCLE,
             //   scale: 4,
