@@ -37,7 +37,7 @@ const App: React.FC = () => {
           <Menu selectedPage={selectedPage} />
           <IonRouterOutlet id="main">
             <Route path="/page/:name" render={(props) => {
-              setSelectedPage(props.match.params.name);
+              // setSelectedPage(props.match.params.name);
               return <Page {...props} />;
             }} exact={true} />
             <Route path="/" render={() => <Redirect to="/Map" />} exact={true} />

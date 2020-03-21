@@ -128,7 +128,7 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
               title: stop.stpnm,
               icon: {
                 url: stopPng,
-                scaledSize: new google.maps.Size(6, 6)
+                scaledSize: new google.maps.Size(8, 8)
               },
               url: '/page/' + stop.stpid
             });
@@ -278,7 +278,7 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
       }
     ];
     const mapOptions = {
-      styles: mapStyles
+      styles: null //mapStyles
     }
     return (
       <div style={{ height: '100%', width: '100%' }}>
