@@ -1,7 +1,6 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
-import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
 
 const Page: React.FC<RouteComponentProps<{ name: string; }>> = ({ match }) => {
@@ -22,7 +21,9 @@ const Page: React.FC<RouteComponentProps<{ name: string; }>> = ({ match }) => {
             <IonTitle size="large">{ match.params.name }</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name={match.params.name} />
+        <div className="container">
+          More coming to the <strong>{ match.params.name }</strong> page soon!
+        </div>
       </IonContent>
     </IonPage>
   );

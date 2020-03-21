@@ -1,7 +1,7 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import './Map.css';
-import { getBusMarkerIcon } from '../const';
+import { getBusMarkerIcon, stopPng } from '../const';
 
 // const AnyReactComponent = ({text}: any) => <div>{text}</div>;
 
@@ -14,6 +14,7 @@ interface MapState {
   maps: any,
   routes: any,
   patterns: any,
+  stops: any,
   polylines: any,
   buses: any,
   mbuses: any
@@ -25,6 +26,7 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
     this.state = {
       zoom: 14,
       patterns: null,
+      stops: null,
       map: null,
       maps: null,
       polylines: null,
@@ -34,7 +36,7 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
     }
   }
   componentDidMount() {
-    const mbusRoutes = "https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getroutes?requestType=getroutes&locale=en&key=8TYWA9FMumRW5JgFXRzkj2Upk&format=json"
+    const mbusRoutes = "https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getroutes?requestType=getroutes&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json"
     fetch(mbusRoutes,
     {
       method: 'GET',
@@ -49,9 +51,9 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
       this.setState({routes: routesMap});
     })
     .catch(error => console.log('error', error));
-    const mbusPatterns = "https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getpatterns?requestType=getpatterns&rtpidatafeed=bustime&locale=en&key=8TYWA9FMumRW5JgFXRzkj2Upk&format=json";
+    const mbusPatterns = "https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getpatterns?requestType=getpatterns&rtpidatafeed=bustime&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json";
     
-    const selectedRoutes = ['BB', 'NW', 'CN', 'DD', 'NX', 'CS'];
+    const selectedRoutes = ['BB', 'NW', 'CN', 'DD', 'NX', 'CS', 'NE', 'OS'];
     const promises = selectedRoutes.map(rt => {
       return fetch(mbusPatterns + "&rt="+rt,
       {
@@ -73,8 +75,14 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
             : {lat: pt.lat, lng: pt.lon, stpid: pt.stpid, stpnm: pt.stpnm}
           });
         });
-      }).map((rt, ind) => [selectedRoutes[ind], rt]))
-      this.setState({patterns: patterns});
+      }).map((rt, ind) => [selectedRoutes[ind], rt]));
+      const stops = Array.from(patterns,
+        ([k, v]) => [
+          k,
+          v.map(pt => pt.filter(stp => 'stpid' in stp))
+        ]
+      );
+      this.setState({patterns: patterns, stops: stops});
     });
   }
 
@@ -103,13 +111,33 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
   }
 
   renderPolylines(polylines) {
-    const { map, buses } = this.state;
+    const { map, maps, buses, stops } = this.state;
     if (polylines && !buses) {
       polylines.forEach((plines, rt) => {
         plines.forEach(polyline => {
           polyline.setMap(map);
         })
       })
+      // console.log(stops);
+      stops.forEach((stopAll, rt) => {
+        stopAll[1].forEach(stopA => {
+          stopA.forEach(stop => {
+            var m = new maps.Marker({
+              position: new maps.LatLng(stop.lat, stop.lng),
+              map: map,
+              title: stop.stpnm,
+              icon: {
+                url: stopPng,
+                scaledSize: new google.maps.Size(6, 6)
+              },
+              url: '/page/' + stop.stpid
+            });
+            maps.event.addListener(m, 'click', function() {
+              window.location.href = this.url;
+            });
+          })
+        })
+      });
       this.renderBuses();
     }
   }
@@ -118,8 +146,8 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
     const { map, maps, routes } = this.state;
     var { mbuses } = this.state;
     var SlidingMarker = require('marker-animate-unobtrusive');
-    const mbusVehicles = 'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getvehicles?requestType=getvehicles&key=8TYWA9FMumRW5JgFXRzkj2Upk&format=json';
-    fetch(mbusVehicles+'&rt=BB%2CNW%2CCN%2CCS%2CDD%2CNX',
+    const mbusVehicles = 'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getvehicles?requestType=getvehicles&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json';
+    fetch(mbusVehicles+'&rt=BB%2CNW%2CCN%2CCS%2CDD%2CNX%2CDD%2C%2COS%2CNE',
     {
       method: 'GET',
       redirect: 'follow',

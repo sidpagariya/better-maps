@@ -41,8 +41,8 @@ const App: React.FC = () => {
               return <Page {...props} />;
             }} exact={true} />
             <Route path="/" render={() => <Redirect to="/Map" />} exact={true} />
-            <Route path="/Map" render={() => <MapView />} exact={true} />
-            <Route path="/Routes" render={() => <Routes />} exact={true} />
+            <Route path="/Map" component={MapView} />
+            <Route path="/Routes" component={Routes} />
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>
