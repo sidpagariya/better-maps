@@ -103,8 +103,8 @@ export default class Routes extends React.Component<RoutesProps, RoutesState> {
               { 
               Array.from(routes).map(([key, value]) => (
                 <IonItem key={key}>
+                  <IonLabel color={key.toLowerCase()}>{value[0]}</IonLabel>
                   <IonToggle color={key.toLowerCase()} checked={routesStor[key]} onIonChange={this.updateToggle} value={key}></IonToggle>
-                  <IonLabel>{value[0]}</IonLabel>
                 </IonItem>
               ))
               }
@@ -113,6 +113,30 @@ export default class Routes extends React.Component<RoutesProps, RoutesState> {
         </IonPage>
       );
       // console.log(Array.from(routes, ([key, value]) => value));
+    }
+    else {
+      return (
+        <IonPage>
+          <IonHeader>
+            <IonToolbar>
+              <IonButtons slot="start">
+                <IonMenuButton />
+              </IonButtons>
+              <IonTitle>Routes</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+
+          <IonContent>
+            <IonHeader collapse="condense">
+              <IonToolbar>
+                <IonTitle size="large">Routes</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+            <IonList lines="none">
+            </IonList>
+          </IonContent>
+        </IonPage>
+      );
     }
   }
 };
