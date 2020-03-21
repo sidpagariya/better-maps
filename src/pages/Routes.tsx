@@ -25,44 +25,44 @@ const Routes: React.FC<RoutesProps> = () => {
         </IonHeader>
         <IonList lines="none">
             <IonItem>
-                <IonToggle color="bb"></IonToggle>
                 <IonLabel>Bursley Baits</IonLabel>
+                <IonToggle color="bb"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="nw"></IonToggle>
                 <IonLabel>Northwood</IonLabel>
+                <IonToggle color="nw"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="cn"></IonToggle>
                 <IonLabel>Commuter North</IonLabel>
+                <IonToggle color="cn"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="cs"></IonToggle>
                 <IonLabel>Commuter South</IonLabel>
+                <IonToggle color="cs"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="nx"></IonToggle>
                 <IonLabel>Northwood Express</IonLabel>
+                <IonToggle color="nx"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="dd"></IonToggle>
                 <IonLabel>Diag-to-Diag</IonLabel>
+                <IonToggle color="dd"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="mx"></IonToggle>
                 <IonLabel>MedExpress</IonLabel>
+                <IonToggle color="mx"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="os"></IonToggle>
                 <IonLabel>Oxford Shuttle</IonLabel>
+                <IonToggle color="os"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="ws"></IonToggle>
                 <IonLabel>Wall Street-NIB</IonLabel>
+                <IonToggle color="ws"></IonToggle>
             </IonItem>
             <IonItem>
-                <IonToggle color="wx"></IonToggle>
                 <IonLabel>Wall Street Express</IonLabel>
+                <IonToggle color="wx"></IonToggle>
             </IonItem>
         </IonList>
       </IonContent>
