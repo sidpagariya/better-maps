@@ -1,9 +1,11 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
+import { withIonLifeCycle } from '@ionic/react';
+import { Plugins } from '@capacitor/core';
 import './Map.css';
-import { getBusMarkerIcon, stopPng } from '../const';
+import { getBusMarkerIcon, stopPng, mapStyles } from '../const';
 
-// const AnyReactComponent = ({text}: any) => <div>{text}</div>;
+const { Storage } = Plugins;
 
 interface MapProps {
   mapCenter: {}
@@ -12,15 +14,31 @@ interface MapState {
   zoom: number,
   map: any,
   maps: any,
+  options: any,
   routes: any,
   patterns: any,
   stops: any,
   polylines: any,
   buses: any,
-  mbuses: any
+  mbuses: any,
+  renderBusT: any,
+  selectedRoutes: any,
+  showStop: any
 }
 
-export default class GoogleMap extends React.Component<MapProps, MapState> {
+class GoogleMap extends React.Component<MapProps, MapState> {
+  ionViewWillEnter() {
+    const { renderBusT } = this.state;
+    if (renderBusT === false) {
+      this.updateSelectedRoutes();
+    }
+    this.getDarkModeStor();
+  }
+
+  ionViewWillLeave() {
+    this.setState({renderBusT: false});
+  }
+
   constructor(props: MapProps) {
     super(props);
     this.state = {
@@ -29,13 +47,35 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
       stops: null,
       map: null,
       maps: null,
+      options: {
+        styles: mapStyles
+      },
       polylines: null,
       routes: null,
       buses: null,
-      mbuses: null
+      mbuses: null,
+      renderBusT: null,
+      selectedRoutes: null,
+      showStop: null
+    }
+    this.toggleDarkTheme = this.toggleDarkTheme.bind(this);
+  }
+
+  componentDidMount() {
+    // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    // this.toggleDarkTheme(prefersDark.matches);
+    // prefersDark.addListener((mediaQuery) => this.toggleDarkTheme(mediaQuery.matches));
+    this.getDarkModeStor();
+  }
+
+  componentDidUpdate(_prevProps, prevState) {
+    if (prevState.showStop === null && this.state.showStop !== null) {
+      console.log("Stop clicked! Stop: " + this.state.showStop);
+      this.setState({ showStop: null });
     }
   }
-  componentDidMount() {
+
+  fetchRoutes() {
     const mbusRoutes = "https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getroutes?requestType=getroutes&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json"
     fetch(mbusRoutes,
     {
@@ -48,12 +88,25 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
     .then(response => response.json())
     .then(result => {
       const routesMap = new Map(result['bustime-response']['routes'].map(rt => [rt.rt, [rt.rtnm, rt.rtclr]]))
-      this.setState({routes: routesMap});
+      this.setState({routes: routesMap}, this.updateSelectedRoutes);
     })
     .catch(error => console.log('error', error));
+  }
+
+  updateSelectedRoutes() {
+    const { renderBusT } = this.state;
+    this.getRoutesStor().then(() => {
+      if (!renderBusT) {
+        this.setState({renderBusT: true}, this.renderBuses);
+      }
+      this.fetchPatterns()
+    });
+  }
+
+  fetchPatterns() {
+    const { selectedRoutes } = this.state;
+    // const selectedRoutes = ['NW', 'CN', 'DD', 'NX', 'CS', 'NE', 'OS'];
     const mbusPatterns = "https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getpatterns?requestType=getpatterns&rtpidatafeed=bustime&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json";
-    
-    const selectedRoutes = ['BB', 'NW', 'CN', 'DD', 'NX', 'CS', 'NE', 'OS'];
     const promises = selectedRoutes.map(rt => {
       return fetch(mbusPatterns + "&rt="+rt,
       {
@@ -76,78 +129,127 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
           });
         });
       }).map((rt, ind) => [selectedRoutes[ind], rt]));
-      const stops = Array.from(patterns,
-        ([k, v]) => [
-          k,
-          v.map(pt => pt.filter(stp => 'stpid' in stp))
-        ]
-      );
-      this.setState({patterns: patterns, stops: stops});
+      this.setState({patterns: patterns}, this.initMapPolyLines);
     });
   }
 
-  componentDidUpdate() {
-    const { map, patterns, polylines, routes } = this.state;
-    if (map && patterns && routes && !polylines) {
-      this.setState({polylines: new Map(
-        Array.from(patterns, 
-          ([k, v]) => [
-            k, 
-            v.map(pt => new google.maps.Polyline({
-                path: pt,
-                geodesic: true,
-                strokeColor: routes.get(k)[1],
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-              })
-            )
-          ]
-        )
-      )})
-    }
+  initMapPolyLines() {
+    const { patterns, routes, stops, maps, polylines } = this.state;
     if (polylines) {
-      this.renderPolylines(polylines);
-    }
-  }
-
-  renderPolylines(polylines) {
-    const { map, maps, buses, stops } = this.state;
-    if (polylines && !buses) {
       polylines.forEach((plines, rt) => {
         plines.forEach(polyline => {
-          polyline.setMap(map);
+          polyline.setMap(null);
         })
       })
-      // console.log(stops);
+    }
+    if (stops) {
       stops.forEach((stopAll, rt) => {
         stopAll[1].forEach(stopA => {
           stopA.forEach(stop => {
+            stop.setMap(null);
+          })
+        })
+      })
+    }
+    const stopsV = Array.from(patterns, 
+      ([k, v]) => [
+        k,
+        v.map(pt => pt.reduce((arr, stop) => {
+          if ('stpid' in stop) {
             var m = new maps.Marker({
               position: new maps.LatLng(stop.lat, stop.lng),
-              map: map,
               title: stop.stpnm,
               icon: {
                 url: stopPng,
                 scaledSize: new google.maps.Size(8, 8)
               },
-              url: '/page/' + stop.stpid
-            });
-            maps.event.addListener(m, 'click', function() {
-              window.location.href = this.url;
-            });
-          })
-        })
+              url: stop.stpid,
+              zIndex: 2
+            })
+            maps.event.addListener(m, 'click', this.stopClicked(m, this));
+            arr.push(m);
+          }
+          return arr;
+        }, []))
+      ]
+    );
+    this.setState({polylines: new Map(
+      Array.from(patterns, 
+        ([k, v]) => [
+          k, 
+          v.map(pt => new maps.Polyline({
+              path: pt,
+              geodesic: true,
+              strokeColor: routes.get(k)[1],
+              strokeOpacity: 1.0,
+              strokeWeight: 2
+            })
+          )
+        ]
+      )
+    ), stops: stopsV}, this.renderPolylines);
+  }
+
+  async getRoutesStor() {
+    const ret = await Storage.get({ key: 'routesStor' });
+    const routesStor = JSON.parse(ret.value);
+    if (routesStor) {
+      this.setState({selectedRoutes : 
+        Object.keys(routesStor).filter(key => routesStor[key] === true)
       });
-      this.renderBuses();
+    } else {
+      this.setState({selectedRoutes : []});
+    }
+  }
+
+  toggleDarkTheme(shouldAdd) {
+    if (window.navigator.userAgent.includes('AndroidDarkMode')){
+      shouldAdd = true
+    }
+    document.body.classList.toggle('dark', shouldAdd);
+    this.setState({options: {styles: shouldAdd ? mapStyles : null}});
+  }
+
+  async getDarkModeStor() {
+    const ret = await Storage.get({ key: 'darkModeOn' });
+    const darkModeOn = JSON.parse(ret.value);
+    this.setState({options: {styles: darkModeOn ? mapStyles : null}});
+  }
+
+  renderPolylines() {
+    const { map, stops, polylines } = this.state;
+    polylines.forEach((plines, rt) => {
+      plines.forEach(polyline => {
+        polyline.setMap(map);
+      })
+    })
+    stops.forEach((stopAll, rt) => {
+      stopAll[1].forEach(stopA => {
+        stopA.forEach(stop => {
+          stop.setMap(map);
+        })
+      })
+    })
+  }
+
+  stopClicked(target, mapthis) {
+    return function() {
+      mapthis.setState({showStop: target.url});
     }
   }
 
   renderBuses() {
-    const { map, maps, routes } = this.state;
+    const { map, maps, routes, selectedRoutes, renderBusT} = this.state;
     var { mbuses } = this.state;
+    if (renderBusT === null) {
+      this.setState({renderBusT: true});
+    } else if (renderBusT === false) {
+      return;
+    }
     var SlidingMarker = require('marker-animate-unobtrusive');
     const mbusVehicles = 'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getvehicles?requestType=getvehicles&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json';
-    fetch(mbusVehicles+'&rt=BB%2CNW%2CCN%2CCS%2CDD%2CNX%2CDD%2C%2COS%2CNE',
+    const routesStr = selectedRoutes.join('%2C');
+    fetch(mbusVehicles+'&rt='+routesStr,
     {
       method: 'GET',
       redirect: 'follow',
@@ -157,11 +259,30 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
     })
     .then(response => response.json())
     .then(result => {
+      if (!result['bustime-response']['vehicle']) {
+        return;
+      }
+      var vids = result['bustime-response']['vehicle'].map(vh => vh.vid);
+      if (mbuses) {
+        mbuses.forEach((mbus, vid) => {
+          if (vid.indexOf("-mark") === -1){
+            if (!selectedRoutes.includes(mbus.getTitle()) && !vids.includes(vid)) {
+              mbus.setMap(null);
+              mbuses.get(vid+"-mark").setMap(null);
+              mbuses.delete(vid);
+              mbuses.delete(vid+"-mark");
+            }
+          }
+        });
+      }
       const buses = result['bustime-response']['vehicle'].map(vh => {
         if (mbuses) {
           if (mbuses.get(vh.vid)) {
+            mbuses.get(vh.vid).setMap(map);
             mbuses.get(vh.vid).setPosition(new maps.LatLng(vh.lat, vh.lon));
-            mbuses.get(vh.vid).setIcon(getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg))
+            mbuses.get(vh.vid).setIcon(getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg));
+            mbuses.get(vh.vid+'-mark').setPosition(new maps.LatLng(vh.lat, vh.lon));
+            mbuses.get(vh.vid+'-mark').setIcon('http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt);
           } else {
             const marker = new SlidingMarker({
               position: new maps.LatLng(vh.lat, vh.lon),
@@ -169,8 +290,21 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
               title: vh.rt,
               duration: 5000,
               easing: "linear",
-              icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg)
+              icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg),
+              optimized: false,
+              zIndex: 3
             });
+            const marker2 = new SlidingMarker({
+              position: new maps.LatLng(vh.lat, vh.lon),
+              map: map,
+              title: vh.rt,
+              duration: 5000,
+              easing: "linear",
+              icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt,
+              optimized: false,
+              zIndex: 4
+            });
+            mbuses.set(vh.vid+'-mark', marker2);
             mbuses.set(vh.vid, marker);
           }
         } else {
@@ -181,14 +315,26 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
             title: vh.rt,
             duration: 5000,
             easing: "linear",
-            icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg)
+            icon: getBusMarkerIcon(routes.get(vh.rt)[1], vh.hdg),
+            optimized: false,
+            zIndex: 3
+          });
+          const marker2 = new SlidingMarker({
+            position: new maps.LatLng(vh.lat, vh.lon),
+            map: map,
+            title: vh.rt,
+            duration: 5000,
+            easing: "linear",
+            icon: 'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' + routes.get(vh.rt)[1].slice(1) + '&annotate=' + vh.rt,
+            optimized: false,
+            zIndex: 4
           });
           mbuses.set(vh.vid, marker);
+          mbuses.set(vh.vid+'-mark', marker2);
         }
         return {vid: vh.vid, lat: vh.lat, lng: vh.lon, hdg: vh.hdg, rt: vh.rt, spd: vh.spd, id: vh.tablockid};
       })
-      this.setState({buses: buses});
-      this.setState({mbuses: mbuses});
+      this.setState({buses: buses, mbuses: mbuses});
     })
     .catch(error => console.log('error', error));
     setTimeout(this.renderBuses.bind(this), 5000);
@@ -196,97 +342,14 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
 
   render() {
     const { mapCenter } = this.props;
-    const { zoom } = this.state;
-    const mapStyles = [
-      {elementType: 'geometry', stylers: [{color: '#121212'}]},
-      {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-      {elementType: 'labels.text.fill', stylers: [{color: '#facf8c'}]},
-      {
-        featureType: 'administrative.locality',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}]
-      },
-      {
-        featureType: 'poi',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}]
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [{color: '#263c3f'}]
-      },
-      {
-        featureType: 'poi.park',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#6b9a76'}]
-      },
-      {
-        featureType: 'road',
-        elementType: 'geometry',
-        stylers: [{color: '#38414e'}]
-      },
-      {
-        featureType: 'road',
-        elementType: 'geometry.stroke',
-        stylers: [{color: '#212a37'}]
-      },
-      {
-        featureType: 'road',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#9ca5b3'}]
-      },
-      {
-        featureType: 'road.highway',
-        elementType: 'geometry',
-        stylers: [{color: '#746855'}]
-      },
-      {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [{color: '#1f2835'}]
-      },
-      {
-        featureType: 'road.highway',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#f3d19c'}]
-      },
-      {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [{color: '#2f3948'}]
-      },
-      {
-        featureType: 'transit.station',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}]
-      },
-      {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{color: '#17263c'}]
-      },
-      {
-        featureType: 'water',
-        elementType: 'labels.text.fill',
-        stylers: [{color: '#515c6d'}]
-      },
-      {
-        featureType: 'water',
-        elementType: 'labels.text.stroke',
-        stylers: [{color: '#17263c'}]
-      }
-    ];
-    const mapOptions = {
-      styles: null //mapStyles
-    }
+    const { zoom, options } = this.state;
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyCW48Rz9hIFEuNdeYKx2sHSz8cQ1z53hI0' }}
           defaultCenter={mapCenter}
           defaultZoom={zoom}
-          options={mapOptions}
+          options={options}
           yesIWantToUseGoogleMapApiInternals={true}
           onGoogleApiLoaded={({ map, maps }) => this.renderMap(map, maps)}
           />
@@ -295,16 +358,7 @@ export default class GoogleMap extends React.Component<MapProps, MapState> {
   }
   
   renderMap(map, maps) {
-    this.setState({map: map, maps: maps});
-    // const infoWindow = new maps.InfoWindow({
-    //   content: '<div class="map-label">Pierpont<div>'
-    // });
-    // const marker = new maps.Marker({
-    //   map: map,
-    //   position: new maps.LatLng(42.2911535, -83.7174913),
-    // });
-    // marker.addListener('click', function() {
-    //   infoWindow.open(map, marker);
-    // });
+    this.setState({map: map, maps: maps}, this.fetchRoutes);
   }
 }
+export default withIonLifeCycle(GoogleMap);

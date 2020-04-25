@@ -6,7 +6,6 @@ import './MapView.css';
 interface OwnProps { }
 
 const MapView = () => {
-  //let locations : Location[] = [{id: 0, lat: 42.2911535, lng: -83.7174913, name: 'LOL'}]
   let mapCenter = {lat: 42.2852842, lng: -83.7276201}
   return (
     <IonPage>

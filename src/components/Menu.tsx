@@ -46,7 +46,7 @@ const appPages: AppPage[] = [
   },
   {
     title: 'Settings',
-    url: '/page/Settings',
+    url: '/Settings',
     iosIcon: settings,
     mdIcon: settingsSharp
   }
