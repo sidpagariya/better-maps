@@ -246,6 +246,10 @@ class GoogleMap extends React.Component<MapProps, MapState> {
     } else if (renderBusT === false) {
       return;
     }
+    if (selectedRoutes && selectedRoutes.length <= 0) {
+      setTimeout(this.renderBuses.bind(this), 5000);
+      return;
+    }
     var SlidingMarker = require('marker-animate-unobtrusive');
     const mbusVehicles = 'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getvehicles?requestType=getvehicles&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json';
     const routesStr = selectedRoutes.join('%2C');
