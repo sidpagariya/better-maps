@@ -1,6 +1,6 @@
 {
   "name": "better-maps",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@capacitor/android": "^1.5.1",
