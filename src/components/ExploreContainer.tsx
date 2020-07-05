@@ -1,8 +1,8 @@
-import React from 'react';
-import './ExploreContainer.css';
+import React from 'react'
+import './ExploreContainer.css'
 
 interface ContainerProps {
-  name: string;
+  name: string
 }
 
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
@@ -10,7 +10,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
     <div className="container">
       <strong>{name}</strong>
     </div>
-  );
-};
+  )
+}
 
-export default ExploreContainer;
+export default ExploreContainer

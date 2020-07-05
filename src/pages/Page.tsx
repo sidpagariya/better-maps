@@ -1,9 +1,17 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
-import { RouteComponentProps } from 'react-router';
-import './Page.css';
+import {
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonMenuButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react'
+import React from 'react'
+import { RouteComponentProps } from 'react-router'
+import './Page.css'
 
-const Page: React.FC<RouteComponentProps<{ name: string; }>> = ({ match }) => {
+const Page: React.FC<RouteComponentProps<{ name: string }>> = ({ match }) => {
   return (
     <IonPage>
       <IonHeader>
@@ -18,15 +26,15 @@ const Page: React.FC<RouteComponentProps<{ name: string; }>> = ({ match }) => {
       <IonContent>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{ match.params.name }</IonTitle>
+            <IonTitle size="large">{match.params.name}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <div className="container">
-          More coming to the <strong>{ match.params.name }</strong> page soon!
+          More coming to the <strong>{match.params.name}</strong> page soon!
         </div>
       </IonContent>
     </IonPage>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

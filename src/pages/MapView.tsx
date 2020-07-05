@@ -1,12 +1,20 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
-import GoogleMap from '../components/Map';
-import './MapView.css';
+import {
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonMenuButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react'
+import React from 'react'
+import GoogleMap from '../components/Map'
+import './MapView.css'
 
-interface OwnProps { }
+interface OwnProps {}
 
 const MapView = () => {
-  let mapCenter = {lat: 42.2852842, lng: -83.7276201}
+  let mapCenter = { lat: 42.2852842, lng: -83.7276201 }
   return (
     <IonPage>
       <IonHeader>
@@ -27,7 +35,7 @@ const MapView = () => {
         <GoogleMap mapCenter={mapCenter} />
       </IonContent>
     </IonPage>
-  );
-};
+  )
+}
 
-export default MapView;
+export default MapView

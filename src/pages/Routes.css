@@ -4,9 +4,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-bb: #007f00;
-  --ion-color-bb-rgb: 0,127,0;
+  --ion-color-bb-rgb: 0, 127, 0;
   --ion-color-bb-contrast: #ffffff;
-  --ion-color-bb-contrast-rgb: 255,255,255;
+  --ion-color-bb-contrast-rgb: 255, 255, 255;
   --ion-color-bb-shade: #007000;
   --ion-color-bb-tint: #1a8c1a;
 }
@@ -21,9 +21,9 @@ ion-content ion-toolbar {
 }
 :root {
   --ion-color-cn: #9933ff;
-  --ion-color-cn-rgb: 153,51,255;
+  --ion-color-cn-rgb: 153, 51, 255;
   --ion-color-cn-contrast: #ffffff;
-  --ion-color-cn-contrast-rgb: 255,255,255;
+  --ion-color-cn-contrast-rgb: 255, 255, 255;
   --ion-color-cn-shade: #872de0;
   --ion-color-cn-tint: #a347ff;
 }
@@ -39,9 +39,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-cs: #3400ff;
-  --ion-color-cs-rgb: 52,0,255;
+  --ion-color-cs-rgb: 52, 0, 255;
   --ion-color-cs-contrast: #ffffff;
-  --ion-color-cs-contrast-rgb: 255,255,255;
+  --ion-color-cs-contrast-rgb: 255, 255, 255;
   --ion-color-cs-shade: #2e00e0;
   --ion-color-cs-tint: #481aff;
 }
@@ -57,9 +57,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-csx: #b2eb07;
-  --ion-color-csx-rgb: 178,235,7;
+  --ion-color-csx-rgb: 178, 235, 7;
   --ion-color-csx-contrast: #000000;
-  --ion-color-csx-contrast-rgb: 0,0,0;
+  --ion-color-csx-contrast-rgb: 0, 0, 0;
   --ion-color-csx-shade: #9dcf06;
   --ion-color-csx-tint: #baed20;
 }
@@ -75,9 +75,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-dd: #808000;
-  --ion-color-dd-rgb: 128,128,0;
+  --ion-color-dd-rgb: 128, 128, 0;
   --ion-color-dd-contrast: #ffffff;
-  --ion-color-dd-contrast-rgb: 255,255,255;
+  --ion-color-dd-contrast-rgb: 255, 255, 255;
   --ion-color-dd-shade: #717100;
   --ion-color-dd-tint: #8d8d1a;
 }
@@ -93,9 +93,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-mx: #ff6600;
-  --ion-color-mx-rgb: 255,102,0;
+  --ion-color-mx-rgb: 255, 102, 0;
   --ion-color-mx-contrast: #000000;
-  --ion-color-mx-contrast-rgb: 0,0,0;
+  --ion-color-mx-contrast-rgb: 0, 0, 0;
   --ion-color-mx-shade: #e05a00;
   --ion-color-mx-tint: #ff751a;
 }
@@ -111,9 +111,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-ne: #1cbd11;
-  --ion-color-ne-rgb: 28,189,17;
+  --ion-color-ne-rgb: 28, 189, 17;
   --ion-color-ne-contrast: #ffffff;
-  --ion-color-ne-contrast-rgb: 255,255,255;
+  --ion-color-ne-contrast-rgb: 255, 255, 255;
   --ion-color-ne-shade: #19a60f;
   --ion-color-ne-tint: #33c429;
 }
@@ -129,9 +129,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-nw: #990000;
-  --ion-color-nw-rgb: 153,0,0;
+  --ion-color-nw-rgb: 153, 0, 0;
   --ion-color-nw-contrast: #ffffff;
-  --ion-color-nw-contrast-rgb: 255,255,255;
+  --ion-color-nw-contrast-rgb: 255, 255, 255;
   --ion-color-nw-shade: #870000;
   --ion-color-nw-tint: #a31a1a;
 }
@@ -147,9 +147,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-nx: #993300;
-  --ion-color-nx-rgb: 153,51,0;
+  --ion-color-nx-rgb: 153, 51, 0;
   --ion-color-nx-contrast: #ffffff;
-  --ion-color-nx-contrast-rgb: 255,255,255;
+  --ion-color-nx-contrast-rgb: 255, 255, 255;
   --ion-color-nx-shade: #872d00;
   --ion-color-nx-tint: #a3471a;
 }
@@ -165,9 +165,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-os: #ff9900;
-  --ion-color-os-rgb: 255,153,0;
+  --ion-color-os-rgb: 255, 153, 0;
   --ion-color-os-contrast: #000000;
-  --ion-color-os-contrast-rgb: 0,0,0;
+  --ion-color-os-contrast-rgb: 0, 0, 0;
   --ion-color-os-shade: #e08700;
   --ion-color-os-tint: #ffa31a;
 }
@@ -183,9 +183,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-ws: #ff0000;
-  --ion-color-ws-rgb: 255,0,0;
+  --ion-color-ws-rgb: 255, 0, 0;
   --ion-color-ws-contrast: #ffffff;
-  --ion-color-ws-contrast-rgb: 255,255,255;
+  --ion-color-ws-contrast-rgb: 255, 255, 255;
   --ion-color-ws-shade: #e00000;
   --ion-color-ws-tint: #ff1a1a;
 }
@@ -201,9 +201,9 @@ ion-content ion-toolbar {
 
 :root {
   --ion-color-wx: #ff0000;
-  --ion-color-wx-rgb: 255,0,0;
+  --ion-color-wx-rgb: 255, 0, 0;
   --ion-color-wx-contrast: #ffffff;
-  --ion-color-wx-contrast-rgb: 255,255,255;
+  --ion-color-wx-contrast-rgb: 255, 255, 255;
   --ion-color-wx-shade: #e00000;
   --ion-color-wx-tint: #ff1a1a;
 }

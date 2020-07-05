@@ -18,7 +18,8 @@ ion-note {
   font-style: italic;
 }
 
-ion-list-header, ion-menu.md ion-note {
+ion-list-header,
+ion-menu.md ion-note {
   padding-left: 10px;
 }
 
@@ -90,14 +91,14 @@ ion-note {
 
 ion-item.selected {
   --color: var(--ion-color-primary);
-} 
+}
 
 .color-maize {
-  color: #FFCD00;
+  color: #ffcd00;
 }
 
 .color-blue {
-  color: #002B64;
+  color: #002b64;
 }
 
 .color-highlighted {
