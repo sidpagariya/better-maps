@@ -1,3 +1,10 @@
+export const busTimeApi = {
+  key: 'NztS3ptaAMhC2tsS3rUKFfqPW',
+  host: 'mbus.ltp.umich.edu',
+  localestring: 'en',
+  path: '/bustime/api/v3',
+  format: 'json',
+}
 export const color_BB = '#007f00'
 export const color_CN = '#9933ff'
 export const color_CS = '#3400ff'

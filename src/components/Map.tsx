@@ -81,9 +81,8 @@ class GoogleMap extends React.Component<MapProps, MapState> {
   componentDidUpdate(_prevProps, prevState) {
     const { callbackModal } = this.props
     if (prevState.showStop === null && this.state.showStop !== null) {
-      console.log('Stop clicked! Stop: ' + this.state.showStop)
-      this.setState({ showStop: null })
       this.fetchPredictions(callbackModal)
+      this.setState({ showStop: null })
     }
   }
 
@@ -128,14 +127,14 @@ class GoogleMap extends React.Component<MapProps, MapState> {
                   time: prd.prdctdn,
                 })
               )
-              // predResult.prds = _.chain(predResult.prds)
-              //   .groupBy('rt')
-              //   .mapValues((v) => {
-              //     return _.chain(v).pluck('time').flattenDeep()
-              //   })
-              //   .value()
+              predResult.prds = _.chain(predResult.prds)
+                .groupBy('rt')
+                .mapValues((v) => ({
+                  des: _.uniq(_.chain(v).map('des').flattenDeep().value())[0],
+                  times: _.chain(v).map('time').flattenDeep().value(),
+                }))
+                .value()
             }
-            console.log(predResult)
             callback(predResult)
           })
       })

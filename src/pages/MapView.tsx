@@ -18,7 +18,6 @@ const MapView: React.FC = () => {
   const [modalData, setModalData] = useState(null)
 
   const modalCallback = (data: any) => {
-    console.log(data)
     setShowModal(true)
     setModalData(data)
   }

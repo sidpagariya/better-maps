@@ -37,123 +37,20 @@ export const PredictionsModal: React.FC<PredictionsModalProps> = (props) => {
           </IonHeader>
           <IonContent>
             <IonList id="pred-list">
-              <IonItem lines="none">
-                <IonLabel color="primary">Bursley Baits</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>3 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>7 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel color="primary">Northwood</IonLabel>
-                <IonChip color="primary">
-                  <IonLabel>19 min</IonLabel>
-                </IonChip>
-                <IonChip color="primary">
-                  <IonLabel>37 min</IonLabel>
-                </IonChip>
-              </IonItem>
+              {Object.entries(data.prds).map(([key, value]: [string, any]) => (
+                <IonItem lines="none" key={key}>
+                  <IonLabel color="primary">{key}</IonLabel>
+                  <IonLabel>To {value.des}</IonLabel>
+                  {console.log(value)}
+                  {
+                    value.times.map((time) => (
+                      <IonChip color="primary" key={time}>
+                        <IonLabel>{time==='DUE'?'NOW':`${time} min`}</IonLabel>
+                      </IonChip>
+                    ))
+                  }
+                </IonItem>
+              ))}
             </IonList>
           </IonContent>
         </IonModal>
