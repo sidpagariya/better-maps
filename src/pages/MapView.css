@@ -13,3 +13,18 @@ ion-router-outlet ion-content {
   --padding-top: 0;
   --padding-bottom: 0;
 }
+
+.my-modal .modal-wrapper {
+  width: 100% !important;
+  height: 240px !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  border-top-right-radius: 1em !important;
+  border-top-left-radius: 1em !important;
+}
+
+.modal-wrapper .ion-page,
+.modal-wrapper ion-content {
+  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+  background: var(--ion-item-background, var(--ion-background-color, #fff));
+}

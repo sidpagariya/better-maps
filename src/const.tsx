@@ -27,6 +27,14 @@ export function getBusMarkerIcon(color, rotation) {
     scale: 0.06,
   }
 }
+export function getColoredMarkerIcon(color, annotation) {
+  return (
+    'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' +
+    color +
+    '&annotate=' +
+    annotation
+  )
+}
 export const mapStyles = [
   { elementType: 'geometry', stylers: [{ color: '#121212' }] },
   { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },

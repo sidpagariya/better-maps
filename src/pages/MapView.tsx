@@ -1,5 +1,10 @@
 import {
   IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
   IonHeader,
   IonMenuButton,
@@ -7,14 +12,27 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react'
-import React from 'react'
+import React, { useState } from 'react'
 import GoogleMap from '../components/Map'
 import './MapView.css'
+import { PredictionsModal } from '../components/Modal'
 
-interface OwnProps {}
-
-const MapView = () => {
+const MapView: React.FC = () => {
   let mapCenter = { lat: 42.2852842, lng: -83.7276201 }
+  const [showModal, setShowModal] = useState(false)
+  const [modalData, setModalData] = useState(null)
+
+  const modalCallback = (data: any) => {
+    console.log(data)
+    setShowModal(true)
+    setModalData(data)
+  }
+
+  const hideModal = () => {
+    setShowModal(false)
+    setModalData(null)
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -32,7 +50,12 @@ const MapView = () => {
             <IonTitle size="large">Map</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <GoogleMap mapCenter={mapCenter} />
+        <GoogleMap mapCenter={mapCenter} callbackModal={modalCallback} />
+        <PredictionsModal
+          show={showModal}
+          data={modalData}
+          hideModalCallback={hideModal}
+        />
       </IonContent>
     </IonPage>
   )

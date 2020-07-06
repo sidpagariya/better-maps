@@ -2,13 +2,23 @@ import React from 'react'
 import GoogleMapReact from 'google-map-react'
 import { withIonLifeCycle } from '@ionic/react'
 import { Plugins } from '@capacitor/core'
+import * as _ from 'lodash'
 import './Map.css'
-import { getBusMarkerIcon, stopPng, mapStyles } from '../const'
+import {
+  getBusMarkerIcon,
+  stopPng,
+  mapStyles,
+  getColoredMarkerIcon,
+} from '../const'
 
 const { Storage } = Plugins
 
+const API_URL =
+  'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/'
+
 interface MapProps {
   mapCenter: {}
+  callbackModal: (data: any) => void
 }
 interface MapState {
   zoom: number
@@ -69,15 +79,72 @@ class GoogleMap extends React.Component<MapProps, MapState> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
+    const { callbackModal } = this.props
     if (prevState.showStop === null && this.state.showStop !== null) {
       console.log('Stop clicked! Stop: ' + this.state.showStop)
       this.setState({ showStop: null })
+      this.fetchPredictions(callbackModal)
     }
+  }
+
+  fetchPredictions(callback: (data: any) => void) {
+    const { selectedRoutes } = this.state
+    var predResult = {
+      prds: null,
+    }
+    const mbusStop =
+      API_URL +
+      `getstops?key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json&stpid=${this.state.showStop}`
+    const mbusPreds =
+      API_URL +
+      `getpredictions?key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json&rt=${selectedRoutes.join(
+        ','
+      )}&stpid=${this.state.showStop}`
+    return fetch(mbusStop, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        Origin: 'mbus.ltp.umich.edu',
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        const stopInfo = result['bustime-response']['stops'][0]
+        predResult = { ...predResult, ...stopInfo }
+        fetch(mbusPreds, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: {
+            Origin: 'mbus.ltp.umich.edu',
+          },
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            if (result['bustime-response']['prd']) {
+              predResult.prds = result['bustime-response']['prd'].map(
+                (prd) => ({
+                  rt: prd.rt,
+                  des: prd.des,
+                  time: prd.prdctdn,
+                })
+              )
+              predResult.prds = _.chain(predResult.prds)
+                .groupBy('rt')
+                .mapValues((v) => {
+                  return _.chain(v).pluck('time').flattenDeep()
+                })
+                .value()
+            }
+            console.log(predResult)
+            callback(predResult)
+          })
+      })
   }
 
   fetchRoutes() {
     const mbusRoutes =
-      'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getroutes?requestType=getroutes&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json'
+      API_URL +
+      'getroutes?requestType=getroutes&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json'
     fetch(mbusRoutes, {
       method: 'GET',
       redirect: 'follow',
@@ -112,7 +179,8 @@ class GoogleMap extends React.Component<MapProps, MapState> {
     const { selectedRoutes } = this.state
     // const selectedRoutes = ['NW', 'CN', 'DD', 'NX', 'CS', 'NE', 'OS'];
     const mbusPatterns =
-      'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getpatterns?requestType=getpatterns&rtpidatafeed=bustime&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json'
+      API_URL +
+      'getpatterns?requestType=getpatterns&rtpidatafeed=bustime&locale=en&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json'
     const promises = selectedRoutes.map((rt) => {
       return fetch(mbusPatterns + '&rt=' + rt, {
         method: 'GET',
@@ -272,7 +340,8 @@ class GoogleMap extends React.Component<MapProps, MapState> {
     }
     var SlidingMarker = require('marker-animate-unobtrusive')
     const mbusVehicles =
-      'https://mbus-cors.herokuapp.com/https://mbus.ltp.umich.edu/bustime/api/v3/getvehicles?requestType=getvehicles&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json'
+      API_URL +
+      'getvehicles?requestType=getvehicles&key=NztS3ptaAMhC2tsS3rUKFfqPW&format=json'
     const routesStr = selectedRoutes.join('%2C')
     fetch(mbusVehicles + '&rt=' + routesStr, {
       method: 'GET',
@@ -316,10 +385,7 @@ class GoogleMap extends React.Component<MapProps, MapState> {
               mbuses
                 .get(vh.vid + '-mark')
                 .setIcon(
-                  'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' +
-                    routes.get(vh.rt)[1].slice(1) +
-                    '&annotate=' +
-                    vh.rt
+                  getColoredMarkerIcon(routes.get(vh.rt)[1].slice(1), vh.rt)
                 )
             } else {
               const marker = new SlidingMarker({
@@ -338,11 +404,10 @@ class GoogleMap extends React.Component<MapProps, MapState> {
                 title: vh.rt,
                 duration: 5000,
                 easing: 'linear',
-                icon:
-                  'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' +
-                  routes.get(vh.rt)[1].slice(1) +
-                  '&annotate=' +
-                  vh.rt,
+                icon: getColoredMarkerIcon(
+                  routes.get(vh.rt)[1].slice(1),
+                  vh.rt
+                ),
                 optimized: false,
                 zIndex: 4,
               })
@@ -367,11 +432,7 @@ class GoogleMap extends React.Component<MapProps, MapState> {
               title: vh.rt,
               duration: 5000,
               easing: 'linear',
-              icon:
-                'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' +
-                routes.get(vh.rt)[1].slice(1) +
-                '&annotate=' +
-                vh.rt,
+              icon: getColoredMarkerIcon(routes.get(vh.rt)[1].slice(1), vh.rt),
               optimized: false,
               zIndex: 4,
             })

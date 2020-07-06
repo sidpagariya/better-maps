@@ -10,7 +10,7 @@ import {
   IonNote,
 } from '@ionic/react'
 import React from 'react'
-import { RouteComponentProps, useLocation, withRouter } from 'react-router-dom'
+import { useLocation, withRouter } from 'react-router-dom'
 import {
   warningSharp,
   warning,
@@ -22,8 +22,6 @@ import {
   settingsSharp,
 } from 'ionicons/icons'
 import './Menu.css'
-
-interface MenuProps extends RouteComponentProps {}
 
 interface AppPage {
   url: string
@@ -59,12 +57,12 @@ const appPages: AppPage[] = [
   },
 ]
 
-const Menu: React.FunctionComponent<MenuProps> = ({}) => {
+const Menu: React.FC = () => {
   let location = useLocation()
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
-        <IonList id="inbox-list" lines="none">
+        <IonList id="menu-list" lines="none">
           <IonListHeader>
             <span className="color-highlighted">Better</span>
             <span>Maps</span>
