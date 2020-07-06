@@ -128,12 +128,12 @@ class GoogleMap extends React.Component<MapProps, MapState> {
                   time: prd.prdctdn,
                 })
               )
-              predResult.prds = _.chain(predResult.prds)
-                .groupBy('rt')
-                .mapValues((v) => {
-                  return _.chain(v).pluck('time').flattenDeep()
-                })
-                .value()
+              // predResult.prds = _.chain(predResult.prds)
+              //   .groupBy('rt')
+              //   .mapValues((v) => {
+              //     return _.chain(v).pluck('time').flattenDeep()
+              //   })
+              //   .value()
             }
             console.log(predResult)
             callback(predResult)
