@@ -36,7 +36,7 @@ export function getBusMarkerIcon(color, rotation) {
 }
 export function getColoredMarkerIcon(color, annotation) {
   return (
-    'http://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' +
+    'https://dtw.doublemap.com/map/img/colorize?img=bus_icon&color=' +
     color +
     '&annotate=' +
     annotation
