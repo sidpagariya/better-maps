@@ -37,11 +37,10 @@ export const PredictionsModal: React.FC<PredictionsModalProps> = (props) => {
           </IonHeader>
           <IonContent>
             <IonList id="pred-list">
-              {Object.entries(data.prds).map(([key, value]: [string, any]) => (
+              {data.prds ? Object.entries(data.prds).map(([key, value]: [string, any]) => (
                 <IonItem lines="none" key={key}>
                   <IonLabel color="primary">{key}</IonLabel>
                   <IonLabel>To {value.des}</IonLabel>
-                  {console.log(value)}
                   {
                     value.times.map((time) => (
                       <IonChip color="primary" key={time}>
@@ -50,7 +49,11 @@ export const PredictionsModal: React.FC<PredictionsModalProps> = (props) => {
                     ))
                   }
                 </IonItem>
-              ))}
+              )) : 
+                <IonItem lines="none">
+                  <IonLabel>{`No predictions found.`}</IonLabel>
+                </IonItem>
+              }
             </IonList>
           </IonContent>
         </IonModal>
