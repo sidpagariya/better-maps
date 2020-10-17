@@ -193,7 +193,8 @@ class GoogleMap extends React.Component<MapProps, MapState> {
       const patterns = new Map(
         vals
           .map((val) => {
-            return val['bustime-response']['ptr'].map((rt) => {
+            return val['bustime-response']['ptr'] ? 
+            val['bustime-response']['ptr'].map((rt) => {
               return rt.pt.map((pt) => {
                 return pt.typ !== 'S'
                   ? { lat: pt.lat, lng: pt.lon }
@@ -204,9 +205,14 @@ class GoogleMap extends React.Component<MapProps, MapState> {
                       stpnm: pt.stpnm,
                     }
               })
-            })
+            }) : null
           })
-          .map((rt, ind) => [selectedRoutes[ind], rt])
+          .reduce((arr, rt, ind) => {
+            if (rt) {
+              arr.push([selectedRoutes[ind], rt])
+            }
+            return arr
+          }, [])
       )
       this.setState({ patterns: patterns }, this.initMapPolyLines)
     })
@@ -215,14 +221,14 @@ class GoogleMap extends React.Component<MapProps, MapState> {
   initMapPolyLines() {
     const { patterns, routes, stops, maps, polylines } = this.state
     if (polylines) {
-      polylines.forEach((plines, rt) => {
+      polylines.forEach((plines, _rt) => {
         plines.forEach((polyline) => {
           polyline.setMap(null)
         })
       })
     }
     if (stops) {
-      stops.forEach((stopAll, rt) => {
+      stops.forEach((stopAll, _rt) => {
         stopAll[1].forEach((stopA) => {
           stopA.forEach((stop) => {
             stop.setMap(null)
@@ -255,7 +261,9 @@ class GoogleMap extends React.Component<MapProps, MapState> {
     this.setState(
       {
         polylines: new Map(
-          Array.from(patterns, ([k, v]) => [
+          Array.from(patterns)
+          .filter(([k, _v]) => routes.get(k) !== undefined)
+          .map(([k, v]) => [
             k,
             v.map(
               (pt) =>
