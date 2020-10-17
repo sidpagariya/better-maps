@@ -13,6 +13,7 @@ import {
 } from '@ionic/react'
 import React from 'react'
 import { Plugins } from '@capacitor/core'
+import Color from 'color';
 import './Routes.css'
 
 const { Storage } = Plugins
@@ -116,15 +117,36 @@ export default class Routes extends React.Component<RoutesProps, RoutesState> {
             </IonHeader>
             <IonList lines="none">
               {Array.from(routes).map(([key, value]) => (
-                <IonItem key={key}>
-                  <IonLabel color={key.toLowerCase()}>{value[0]}</IonLabel>
-                  <IonToggle
-                    color={key.toLowerCase()}
-                    checked={routesStor[key]}
-                    onIonChange={this.updateToggle}
-                    value={key}
-                  ></IonToggle>
-                </IonItem>
+                <React.Fragment key={key.toLowerCase()}>
+                  <style key={key.toLowerCase()} dangerouslySetInnerHTML={{__html: `
+                    :root {
+                      --ion-color-`+key.toLowerCase()+`: `+value[1]+`;
+                      --ion-color-`+key.toLowerCase()+`-rgb: `+Color(value[1]).rgb().toString().slice(4, -1)+`;
+                      --ion-color-`+key.toLowerCase()+`-contrast: #ffffff;
+                      --ion-color-`+key.toLowerCase()+`-contrast-rgb: 255, 255, 255;
+                      --ion-color-`+key.toLowerCase()+`-shade: `+Color(value[1]).darken(0.1).hex()+`;
+                      --ion-color-`+key.toLowerCase()+`-tint: `+Color(value[1]).lighten(0.1).hex()+`;
+                    }
+                    
+                    .ion-color-`+key.toLowerCase()+` {
+                      --ion-color-base: var(--ion-color-`+key.toLowerCase()+`);
+                      --ion-color-base-rgb: var(--ion-color-`+key.toLowerCase()+`-rgb);
+                      --ion-color-contrast: var(--ion-color-`+key.toLowerCase()+`-contrast);
+                      --ion-color-contrast-rgb: var(--ion-color-`+key.toLowerCase()+`-contrast-rgb);
+                      --ion-color-shade: var(--ion-color-`+key.toLowerCase()+`-shade);
+                      --ion-color-tint: var(--ion-color-`+key.toLowerCase()+`-tint);
+                    }
+                  `}} />
+                  <IonItem key={key}>
+                    <IonLabel color={key.toLowerCase()}>{value[0]}</IonLabel>
+                    <IonToggle
+                      color={key.toLowerCase()}
+                      checked={routesStor[key]}
+                      onIonChange={this.updateToggle}
+                      value={key}
+                    ></IonToggle>
+                  </IonItem>
+                </React.Fragment>
               ))}
             </IonList>
           </IonContent>
